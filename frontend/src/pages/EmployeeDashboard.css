@@ -1,0 +1,120 @@
+.employee-dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.employee-dashboard-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.employee-dashboard-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.employee-dashboard-header h2 {
+  color: #333;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.employee-dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.employee-stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.employee-stat-card h3 {
+  color: #999;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.employee-stat-card p {
+  color: #333;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.employee-requests-section {
+  margin-top: 30px;
+}
+
+.employee-requests-section h3 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.employee-requests-list {
+  display: grid;
+  gap: 20px;
+}
+
+.complete-button {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.complete-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+}
+
+.complete-button:active {
+  transform: translateY(0);
+}
+
+.complete-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.employee-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.employee-empty-state p {
+  color: #999;
+  font-size: 18px;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .employee-dashboard-header h2 {
+    font-size: 24px;
+  }
+
+  .employee-dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+}
