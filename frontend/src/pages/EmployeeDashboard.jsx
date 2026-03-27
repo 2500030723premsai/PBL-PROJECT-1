@@ -1,56 +1,79 @@
-import { useContext } from "react";
+import { useContext, useMemo, useState } from "react";
 import { AppContext } from "../contexts/AppContext";
 import Navbar from "../components/Navbar";
 import RequestCard from "../components/RequestCard";
 import "./EmployeeDashboard.css";
 
 function EmployeeDashboard() {
-  const { requests, setRequests } = useContext(AppContext);
+  const { requests, setRequests, user } = useContext(AppContext);
+  const [error, setError] = useState(null);
 
-  const completeRequest = (id) => {
-    const updated = requests.map((req) =>
-      req.id === id ? { ...req, status: "Completed" } : req
-    );
-    setRequests(updated);
-  };
-
-  const assignedRequests = requests.filter(
-    (req) => req.assignedTo === "Employee1"
+  // Derived state — only requests assigned to this employee
+  const assignedRequests = useMemo(
+    () => requests.filter((req) => req.assignedTo === "Employee1"),
+    [requests]
   );
+  const completedCount = useMemo(
+    () => assignedRequests.filter((r) => r.status === "Completed").length,
+    [assignedRequests]
+  );
+  const pendingCount = assignedRequests.length - completedCount;
+
+  // Simulated async complete — mimics API PATCH call
+  const completeRequest = async (id) => {
+    setError(null);
+    try {
+      await new Promise((res) => setTimeout(res, 400));
+      setRequests((prev) =>
+        prev.map((req) =>
+          req.id === id ? { ...req, status: "Completed" } : req
+        )
+      );
+    } catch {
+      setError("Failed to update request. Please try again.");
+    }
+  };
 
   return (
     <div className="employee-dashboard-container">
       <Navbar />
-      <div className="employee-dashboard-content">
-        <div className="employee-dashboard-header">
+      <main className="employee-dashboard-content">
+        <header className="employee-dashboard-header">
           <h2>Employee Dashboard</h2>
-        </div>
+        </header>
 
-        <div className="employee-dashboard-stats">
+        <section className="employee-dashboard-stats" aria-label="Task statistics">
           <div className="employee-stat-card">
             <h3>Assigned Tasks</h3>
             <p>{assignedRequests.length}</p>
           </div>
           <div className="employee-stat-card">
             <h3>Completed</h3>
-            <p>{assignedRequests.filter(req => req.status === "Completed").length}</p>
+            <p>{completedCount}</p>
           </div>
           <div className="employee-stat-card">
             <h3>Pending</h3>
-            <p>{assignedRequests.filter(req => req.status !== "Completed").length}</p>
+            <p>{pendingCount}</p>
           </div>
-        </div>
+        </section>
 
-        <div className="employee-requests-section">
+        {error && (
+          <div className="form-error" role="alert" aria-live="assertive">
+            {error}
+          </div>
+        )}
+
+        <section className="employee-requests-section" aria-label="Assigned requests">
           <h3>My Assigned Requests</h3>
           {assignedRequests.length > 0 ? (
             <div className="employee-requests-list">
               {assignedRequests.map((req) => (
                 <RequestCard key={req.id} request={req}>
-                  <button 
-                    className="complete-button" 
+                  <button
+                    className="complete-button"
                     onClick={() => completeRequest(req.id)}
                     disabled={req.status === "Completed"}
+                    aria-label={`Mark request as completed: ${req.title}`}
                   >
                     {req.status === "Completed" ? "Completed" : "Mark Completed"}
                   </button>
@@ -58,12 +81,12 @@ function EmployeeDashboard() {
               ))}
             </div>
           ) : (
-            <div className="employee-empty-state">
+            <div className="employee-empty-state" role="status">
               <p>No requests assigned to you yet.</p>
             </div>
           )}
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }
